@@ -1,4 +1,5 @@
 class Space {
+  static const XS = 6.0;
   static const S = 12.0;
   static const M = 16.0;
   static const L = 20.0;

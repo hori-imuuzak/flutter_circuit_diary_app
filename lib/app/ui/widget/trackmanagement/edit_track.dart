@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:circuit_diary/app/state/track_state.dart';
+import 'package:circuit_diary/app/state_notifier/track_state_notifier.dart';
 import 'package:circuit_diary/app/ui/style.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class EditTrack extends StatefulWidget {
   EditTrack({this.track});
@@ -22,14 +25,21 @@ class _EditTrackState extends State<EditTrack> {
   String _trackName;
   String _trackAddress;
   LatLng _trackLatLng;
+  String _trackUrl;
   String _trackMemo;
   File _file;
   final _formKey = GlobalKey<FormState>();
+  final _addressTextController = TextEditingController();
   GoogleMapController _mapController;
   final _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
+    final trackStateNotifier = Provider.of<TrackStateNotifier>(context, listen: false);
+    final trackState = Provider.of<TrackState>(context, listen: true);
+
+    _addressTextController.value = _addressTextController.value.copyWith(text: trackState.reverseGeoCodeResult);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -81,6 +91,7 @@ class _EditTrackState extends State<EditTrack> {
                     },
                   ),
                   TextFormField(
+                    controller: _addressTextController,
                     decoration: const InputDecoration(
                       hintText: "所在地を入力してください",
                       labelText: "所在地",
@@ -128,6 +139,7 @@ class _EditTrackState extends State<EditTrack> {
                       zoomControlsEnabled: true,
                       zoomGesturesEnabled: true,
                       onTap: (LatLng latlng) {
+                        trackStateNotifier.reverseGeoCoding(latlng.latitude, latlng.longitude);
                         setState(() {
                           _trackLatLng = latlng;
                         });
@@ -166,6 +178,18 @@ class _EditTrackState extends State<EditTrack> {
                         ),
                       ],
                     ),
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: "URLを入力してください。",
+                      labelText: "URL（任意）",
+                    ),
+                    keyboardType: TextInputType.url,
+                    onSaved: (String value) {
+                      setState(() {
+                        _trackUrl = value;
+                      });
+                    },
                   ),
                   TextFormField(
                     decoration: const InputDecoration(

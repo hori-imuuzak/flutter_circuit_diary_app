@@ -1,11 +1,14 @@
-import 'package:flutter_state_notifier/flutter_state_notifier.dart';
+import 'package:circuit_diary/app/state/track_state.dart';
+import 'package:circuit_diary/app/state_notifier/track_state_notifier.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 
 import 'package:circuit_diary/app/domain/repository/car_repository.dart';
+import 'package:circuit_diary/app/domain/repository/geo_repository.dart';
 
 import 'package:circuit_diary/app/state/car_state.dart';
 import 'package:circuit_diary/app/state_notifier/car_state_notifier.dart';
@@ -14,6 +17,7 @@ import 'package:circuit_diary/app/ui/screen/car_management.dart';
 import 'package:circuit_diary/app/ui/screen/track_management.dart';
 
 import 'package:circuit_diary/app/infrastructure/firebase/firebase_car_repository.dart';
+import 'package:circuit_diary/app/infrastructure/googlemap/googlemap_geo_repository.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,9 +61,14 @@ Widget circuitDiary() {
 
   return MultiProvider(
     providers: [
+      // repositories
       Provider<CarRepository>(create: (_) => FirebaseCarRepository()),
+      Provider<GeoRepository>(create: (_) => GoogleMapGeoRepository()),
+      // notifiers
       StateNotifierProvider<CarStateNotifier, CarState>(
-          create: (context) => CarStateNotifier(context.read))
+          create: (context) => CarStateNotifier(context.read)),
+      StateNotifierProvider<TrackStateNotifier, TrackState>(
+          create: (context) => TrackStateNotifier(context.read)),
     ],
     child: app,
   );
