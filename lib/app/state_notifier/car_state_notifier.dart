@@ -14,6 +14,7 @@ class CarStateNotifier extends StateNotifier<CarState> {
 
   CarRepository get _carRepository => _read<CarRepository>();
 
+  // 車両作成
   Future<void> createCar(Car car) async {
     await this._carRepository.create(car);
 
@@ -34,6 +35,7 @@ class CarStateNotifier extends StateNotifier<CarState> {
     );
   }
 
+  // 車両一覧取得
   Future<void> fetchCarList() async {
     var carList = await this._carRepository.list();
 
@@ -41,6 +43,15 @@ class CarStateNotifier extends StateNotifier<CarState> {
     state = CarState(
       carList: carList,
       editingCar: state.editingCar,
+      isSaved: state.isSaved,
+    );
+  }
+  
+  // 編集車両の選択
+  void editCar(Car car) {
+    state = CarState(
+      carList: state.carList,
+      editingCar: car,
       isSaved: state.isSaved,
     );
   }

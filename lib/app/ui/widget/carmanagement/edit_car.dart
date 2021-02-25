@@ -9,18 +9,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class EditCar extends StatefulWidget {
-  EditCar({this.car});
-
-  final Object car;
+  EditCar();
 
   @override
-  State createState() => _EditCarState(car: this.car);
+  State createState() => _EditCarState();
 }
 
 class _EditCarState extends State<EditCar> {
-  _EditCarState({this.car});
-
-  final Object car;
+  _EditCarState();
 
   String _carName;
   String _carODO;
@@ -28,15 +24,44 @@ class _EditCarState extends State<EditCar> {
   final _formKey = GlobalKey<FormState>();
   final _picker = ImagePicker();
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final carState = Provider.of<CarState>(context, listen: false);
+      final editingCar = carState.editingCar;
+
+      _carName = editingCar.name;
+      _carODO = "${editingCar.odo}";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final carStateNotifier = Provider.of<CarStateNotifier>(context, listen: false);
-    final carState = Provider.of<CarState>(context, listen: true);
+    final carState = Provider.of<CarState>(context, listen: false);
+
+    final editingCar = carState.editingCar;
+
+    final List<Widget> actions = [];
+    if (editingCar != null) {
+      actions.add(IconButton(icon: Icon(Icons.delete, color: Colors.white), onPressed: () {}));
+    }
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_getTitle(this.car)),
+          title: Text(_getTitle(editingCar)),
+          leading: BackButton(
+            color: Colors.white,
+            onPressed: () {
+              Navigator.of(context).pop();
+              carStateNotifier.editCar(null);
+            },
+          ),
+          actions: actions,
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: Space.M),
@@ -45,6 +70,7 @@ class _EditCarState extends State<EditCar> {
             child: Column(
               children: [
                 TextFormField(
+                  initialValue: editingCar != null ? editingCar.name : "",
                   decoration: const InputDecoration(
                     hintText: "名前を入力してください",
                     labelText: "車両名",
@@ -63,6 +89,7 @@ class _EditCarState extends State<EditCar> {
                   },
                 ),
                 TextFormField(
+                  initialValue: editingCar != null ? "${editingCar.odo}" : "",
                   decoration: const InputDecoration(
                     hintText: "走行距離を入力してください",
                     labelText: "走行距離km（初期値）",
@@ -151,11 +178,11 @@ class _EditCarState extends State<EditCar> {
     }
   }
 
-  String _getTitle(Object car) {
+  String _getTitle(Car car) {
     if (car == null) {
       return "車両追加";
     } else {
-      return "RX-8を編集";
+      return "${car.name}を編集";
     }
   }
 }

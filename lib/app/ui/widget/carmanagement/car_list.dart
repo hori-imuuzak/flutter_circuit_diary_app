@@ -6,6 +6,10 @@ import 'car_item.dart';
 
 class CarList extends StatelessWidget {
 
+  CarList({ this.onTapItem });
+
+  final Function onTapItem;
+
   @override
   Widget build(BuildContext context) {
     final carStateNotifier = Provider.of<CarStateNotifier>(context, listen: false);
@@ -19,6 +23,10 @@ class CarList extends StatelessWidget {
         name: car.name,
         odo: "${car.odo}km",
         imageUrl: car.imageUrl,
+        onTap: () {
+          carStateNotifier.editCar(car);
+          this.onTapItem();
+        }
       ));
     });
 

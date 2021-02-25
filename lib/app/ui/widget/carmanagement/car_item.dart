@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 
 class CarItem extends StatelessWidget {
 
-  CarItem({ this.name, this.odo, this.imageUrl });
+  CarItem({ this.name, this.odo, this.imageUrl, this.onTap });
 
   final String name;
   final String odo;
   final String imageUrl;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
     // 一旦固定で名前/走行距離を出す
     return InkWell(
-      onTap: () {},
+      onTap: this.onTap,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
