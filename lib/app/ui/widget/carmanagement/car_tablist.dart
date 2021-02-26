@@ -1,5 +1,6 @@
 import 'package:circuit_diary/app/state/car_state.dart';
 import 'package:circuit_diary/app/state_notifier/car_state_notifier.dart';
+import 'package:circuit_diary/app/ui/widget/carmaintenance/car_maintenance_list.dart';
 import 'package:circuit_diary/app/ui/widget/carmanagement/edit_car.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,7 @@ class CarTabList extends StatelessWidget {
             body: TabBarView(
               children: [
                 EditCar(hasAppBar: false),
-                Container(),
+                CarMaintenanceList(),
               ],
             ),
           );
