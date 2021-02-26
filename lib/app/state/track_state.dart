@@ -8,6 +8,7 @@ part 'track_state.freezed.dart';
 abstract class TrackState with _$TrackState {
 
   factory TrackState({
+    String editName,
     String trackName,
     String postalCode,
     String address,

@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:circuit_diary/app/domain/entity/car.dart';
 import 'package:circuit_diary/app/state/car_state.dart';
 import 'package:circuit_diary/app/state_notifier/car_state_notifier.dart';
 import 'package:circuit_diary/app/ui/style.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class EditCar extends StatelessWidget {
@@ -13,6 +11,8 @@ class EditCar extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _nameText = TextEditingController();
   final _odoText = TextEditingController();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class EditCar extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_getTitle(null)),
+          title: Text(_getTitle(carState.editName)),
           leading: BackButton(
             color: Colors.white,
             onPressed: () {
@@ -53,7 +53,7 @@ class EditCar extends StatelessWidget {
                     labelText: "車両名",
                   ),
                   validator: carStateNotifier.getEmptyValidator(),
-                  onSaved: (String value) {
+                  onChanged: (String value) {
                     carStateNotifier.setName(value);
                   },
                 ),
@@ -65,7 +65,7 @@ class EditCar extends StatelessWidget {
                   ),
                   keyboardType: TextInputType.number,
                   validator: carStateNotifier.getEmptyValidator(),
-                  onSaved: (String value) {
+                  onChanged: (String value) {
                     carStateNotifier.setOdo(value);
                   },
                 ),
@@ -125,11 +125,11 @@ class EditCar extends StatelessWidget {
     }
   }
 
-  String _getTitle(Car car) {
-    if (car == null) {
+  String _getTitle(String editName) {
+    if (editName == "") {
       return "車両追加";
     } else {
-      return "${car.name}を編集";
+      return "$editNameを編集";
     }
   }
 }

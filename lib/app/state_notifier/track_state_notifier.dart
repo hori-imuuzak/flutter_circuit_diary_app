@@ -10,14 +10,16 @@ import 'package:circuit_diary/app/state/track_state.dart';
 class TrackStateNotifier extends StateNotifier<TrackState> {
   TrackStateNotifier(this._read)
       : super(TrackState(
-            trackName: "",
-            postalCode: "",
-            address: "",
-            latitude: 35.652832,
-            longitude: 139.839478,
-            image: null,
-            url: "",
-            memo: ""));
+          editName: "",
+          trackName: "",
+          postalCode: "",
+          address: "",
+          latitude: 35.652832,
+          longitude: 139.839478,
+          image: null,
+          url: "",
+          memo: "",
+        ));
 
   final T Function<T>() _read;
 
@@ -77,14 +79,15 @@ class TrackStateNotifier extends StateNotifier<TrackState> {
   // 初期化
   void clearEdit() {
     state = state.copyWith(
-        trackName: "",
-        postalCode: "",
-        address: "",
-        latitude: 35.652832,
-        longitude: 139.839478,
-        image: null,
-        url: "",
-        memo: "",
+      editName: "",
+      trackName: "",
+      postalCode: "",
+      address: "",
+      latitude: 35.652832,
+      longitude: 139.839478,
+      image: null,
+      url: "",
+      memo: "",
     );
   }
 

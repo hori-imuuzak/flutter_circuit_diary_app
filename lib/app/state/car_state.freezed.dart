@@ -16,6 +16,7 @@ class _$CarStateTearOff {
 // ignore: unused_element
   _CarState call(
       {List<Car> carList,
+      String editName,
       String name,
       String odo,
       File image,
@@ -23,6 +24,7 @@ class _$CarStateTearOff {
       bool isSaved}) {
     return _CarState(
       carList: carList,
+      editName: editName,
       name: name,
       odo: odo,
       image: image,
@@ -39,6 +41,7 @@ const $CarState = _$CarStateTearOff();
 /// @nodoc
 mixin _$CarState {
   List<Car> get carList;
+  String get editName;
   String get name;
   String get odo;
   File get image;
@@ -55,6 +58,7 @@ abstract class $CarStateCopyWith<$Res> {
       _$CarStateCopyWithImpl<$Res>;
   $Res call(
       {List<Car> carList,
+      String editName,
       String name,
       String odo,
       File image,
@@ -73,6 +77,7 @@ class _$CarStateCopyWithImpl<$Res> implements $CarStateCopyWith<$Res> {
   @override
   $Res call({
     Object carList = freezed,
+    Object editName = freezed,
     Object name = freezed,
     Object odo = freezed,
     Object image = freezed,
@@ -81,6 +86,7 @@ class _$CarStateCopyWithImpl<$Res> implements $CarStateCopyWith<$Res> {
   }) {
     return _then(_value.copyWith(
       carList: carList == freezed ? _value.carList : carList as List<Car>,
+      editName: editName == freezed ? _value.editName : editName as String,
       name: name == freezed ? _value.name : name as String,
       odo: odo == freezed ? _value.odo : odo as String,
       image: image == freezed ? _value.image : image as File,
@@ -97,6 +103,7 @@ abstract class _$CarStateCopyWith<$Res> implements $CarStateCopyWith<$Res> {
   @override
   $Res call(
       {List<Car> carList,
+      String editName,
       String name,
       String odo,
       File image,
@@ -116,6 +123,7 @@ class __$CarStateCopyWithImpl<$Res> extends _$CarStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object carList = freezed,
+    Object editName = freezed,
     Object name = freezed,
     Object odo = freezed,
     Object image = freezed,
@@ -124,6 +132,7 @@ class __$CarStateCopyWithImpl<$Res> extends _$CarStateCopyWithImpl<$Res>
   }) {
     return _then(_CarState(
       carList: carList == freezed ? _value.carList : carList as List<Car>,
+      editName: editName == freezed ? _value.editName : editName as String,
       name: name == freezed ? _value.name : name as String,
       odo: odo == freezed ? _value.odo : odo as String,
       image: image == freezed ? _value.image : image as File,
@@ -137,6 +146,7 @@ class __$CarStateCopyWithImpl<$Res> extends _$CarStateCopyWithImpl<$Res>
 class _$_CarState implements _CarState {
   _$_CarState(
       {this.carList,
+      this.editName,
       this.name,
       this.odo,
       this.image,
@@ -145,6 +155,8 @@ class _$_CarState implements _CarState {
 
   @override
   final List<Car> carList;
+  @override
+  final String editName;
   @override
   final String name;
   @override
@@ -158,7 +170,7 @@ class _$_CarState implements _CarState {
 
   @override
   String toString() {
-    return 'CarState(carList: $carList, name: $name, odo: $odo, image: $image, isUpdate: $isUpdate, isSaved: $isSaved)';
+    return 'CarState(carList: $carList, editName: $editName, name: $name, odo: $odo, image: $image, isUpdate: $isUpdate, isSaved: $isSaved)';
   }
 
   @override
@@ -168,6 +180,9 @@ class _$_CarState implements _CarState {
             (identical(other.carList, carList) ||
                 const DeepCollectionEquality()
                     .equals(other.carList, carList)) &&
+            (identical(other.editName, editName) ||
+                const DeepCollectionEquality()
+                    .equals(other.editName, editName)) &&
             (identical(other.name, name) ||
                 const DeepCollectionEquality().equals(other.name, name)) &&
             (identical(other.odo, odo) ||
@@ -185,6 +200,7 @@ class _$_CarState implements _CarState {
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(carList) ^
+      const DeepCollectionEquality().hash(editName) ^
       const DeepCollectionEquality().hash(name) ^
       const DeepCollectionEquality().hash(odo) ^
       const DeepCollectionEquality().hash(image) ^
@@ -200,6 +216,7 @@ class _$_CarState implements _CarState {
 abstract class _CarState implements CarState {
   factory _CarState(
       {List<Car> carList,
+      String editName,
       String name,
       String odo,
       File image,
@@ -208,6 +225,8 @@ abstract class _CarState implements CarState {
 
   @override
   List<Car> get carList;
+  @override
+  String get editName;
   @override
   String get name;
   @override

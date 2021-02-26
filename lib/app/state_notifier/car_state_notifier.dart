@@ -12,6 +12,7 @@ class CarStateNotifier extends StateNotifier<CarState> {
   CarStateNotifier(this._read): super(
     CarState(
         carList: [],
+        editName: "",
         name: "",
         odo: "",
         image: null,
@@ -83,6 +84,7 @@ class CarStateNotifier extends StateNotifier<CarState> {
   // 初期化
   void clearEdit() {
     state = state.copyWith(
+      editName: "",
       name: "",
       odo: "",
       image: null,
@@ -93,6 +95,7 @@ class CarStateNotifier extends StateNotifier<CarState> {
   // 編集内容をセット
   void setEdit(Car car) {
     state = state.copyWith(
+      editName: car.name,
       name: car.name,
       odo: "${car.odo}",
       image: null,

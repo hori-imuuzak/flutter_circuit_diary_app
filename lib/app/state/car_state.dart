@@ -11,6 +11,7 @@ abstract class CarState with _$CarState {
 
   factory CarState({
     List<Car> carList,
+    String editName,
     String name,
     String odo,
     File image,

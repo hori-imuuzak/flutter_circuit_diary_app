@@ -9,15 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-class EditTrack extends StatefulWidget {
-  EditTrack();
-
-  @override
-  State createState() => _EditTrackState();
-}
-
-class _EditTrackState extends State<EditTrack> {
-  _EditTrackState();
+class EditTrack extends StatelessWidget {
 
   final _formKey = GlobalKey<FormState>();
   final _nameText = TextEditingController();
@@ -25,17 +17,6 @@ class _EditTrackState extends State<EditTrack> {
   final _addressText = TextEditingController();
   final _urlText = TextEditingController();
   final _memoText = TextEditingController();
-
-  @override
-  void dispose() {
-    _nameText.dispose();
-    _postalCodeText.dispose();
-    _addressText.dispose();
-    _urlText.dispose();
-    _memoText.dispose();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +58,7 @@ class _EditTrackState extends State<EditTrack> {
                     ),
                     keyboardType: TextInputType.text,
                     validator: trackStateNotifier.getEmptyValidator(),
-                    onSaved: (String value) {
+                    onChanged: (String value) {
                       trackStateNotifier.setTrackName(value);
                     },
                   ),
@@ -101,7 +82,7 @@ class _EditTrackState extends State<EditTrack> {
                     ),
                     keyboardType: TextInputType.streetAddress,
                     validator: trackStateNotifier.getEmptyValidator(),
-                    onSaved: (String value) {
+                    onChanged: (String value) {
                       trackStateNotifier.setAddress(value);
                     },
                   ),
@@ -170,7 +151,7 @@ class _EditTrackState extends State<EditTrack> {
                       labelText: "URL（任意）",
                     ),
                     keyboardType: TextInputType.url,
-                    onSaved: (String value) {
+                    onChanged: (String value) {
                       trackStateNotifier.setUrl(value);
                     },
                   ),
@@ -182,7 +163,7 @@ class _EditTrackState extends State<EditTrack> {
                     ),
                     maxLines: null,
                     keyboardType: TextInputType.text,
-                    onSaved: (String value) {
+                    onChanged: (String value) {
                       trackStateNotifier.setMemo(value);
                     },
                   ),

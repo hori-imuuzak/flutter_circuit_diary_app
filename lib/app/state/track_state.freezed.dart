@@ -15,7 +15,8 @@ class _$TrackStateTearOff {
 
 // ignore: unused_element
   _TrackState call(
-      {String trackName,
+      {String editName,
+      String trackName,
       String postalCode,
       String address,
       double latitude,
@@ -24,6 +25,7 @@ class _$TrackStateTearOff {
       String url,
       String memo}) {
     return _TrackState(
+      editName: editName,
       trackName: trackName,
       postalCode: postalCode,
       address: address,
@@ -42,6 +44,7 @@ const $TrackState = _$TrackStateTearOff();
 
 /// @nodoc
 mixin _$TrackState {
+  String get editName;
   String get trackName;
   String get postalCode;
   String get address;
@@ -61,7 +64,8 @@ abstract class $TrackStateCopyWith<$Res> {
           TrackState value, $Res Function(TrackState) then) =
       _$TrackStateCopyWithImpl<$Res>;
   $Res call(
-      {String trackName,
+      {String editName,
+      String trackName,
       String postalCode,
       String address,
       double latitude,
@@ -81,6 +85,7 @@ class _$TrackStateCopyWithImpl<$Res> implements $TrackStateCopyWith<$Res> {
 
   @override
   $Res call({
+    Object editName = freezed,
     Object trackName = freezed,
     Object postalCode = freezed,
     Object address = freezed,
@@ -91,6 +96,7 @@ class _$TrackStateCopyWithImpl<$Res> implements $TrackStateCopyWith<$Res> {
     Object memo = freezed,
   }) {
     return _then(_value.copyWith(
+      editName: editName == freezed ? _value.editName : editName as String,
       trackName: trackName == freezed ? _value.trackName : trackName as String,
       postalCode:
           postalCode == freezed ? _value.postalCode : postalCode as String,
@@ -111,7 +117,8 @@ abstract class _$TrackStateCopyWith<$Res> implements $TrackStateCopyWith<$Res> {
       __$TrackStateCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String trackName,
+      {String editName,
+      String trackName,
       String postalCode,
       String address,
       double latitude,
@@ -133,6 +140,7 @@ class __$TrackStateCopyWithImpl<$Res> extends _$TrackStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object editName = freezed,
     Object trackName = freezed,
     Object postalCode = freezed,
     Object address = freezed,
@@ -143,6 +151,7 @@ class __$TrackStateCopyWithImpl<$Res> extends _$TrackStateCopyWithImpl<$Res>
     Object memo = freezed,
   }) {
     return _then(_TrackState(
+      editName: editName == freezed ? _value.editName : editName as String,
       trackName: trackName == freezed ? _value.trackName : trackName as String,
       postalCode:
           postalCode == freezed ? _value.postalCode : postalCode as String,
@@ -159,7 +168,8 @@ class __$TrackStateCopyWithImpl<$Res> extends _$TrackStateCopyWithImpl<$Res>
 /// @nodoc
 class _$_TrackState implements _TrackState {
   _$_TrackState(
-      {this.trackName,
+      {this.editName,
+      this.trackName,
       this.postalCode,
       this.address,
       this.latitude,
@@ -168,6 +178,8 @@ class _$_TrackState implements _TrackState {
       this.url,
       this.memo});
 
+  @override
+  final String editName;
   @override
   final String trackName;
   @override
@@ -187,13 +199,16 @@ class _$_TrackState implements _TrackState {
 
   @override
   String toString() {
-    return 'TrackState(trackName: $trackName, postalCode: $postalCode, address: $address, latitude: $latitude, longitude: $longitude, image: $image, url: $url, memo: $memo)';
+    return 'TrackState(editName: $editName, trackName: $trackName, postalCode: $postalCode, address: $address, latitude: $latitude, longitude: $longitude, image: $image, url: $url, memo: $memo)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is _TrackState &&
+            (identical(other.editName, editName) ||
+                const DeepCollectionEquality()
+                    .equals(other.editName, editName)) &&
             (identical(other.trackName, trackName) ||
                 const DeepCollectionEquality()
                     .equals(other.trackName, trackName)) &&
@@ -220,6 +235,7 @@ class _$_TrackState implements _TrackState {
   @override
   int get hashCode =>
       runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(editName) ^
       const DeepCollectionEquality().hash(trackName) ^
       const DeepCollectionEquality().hash(postalCode) ^
       const DeepCollectionEquality().hash(address) ^
@@ -237,7 +253,8 @@ class _$_TrackState implements _TrackState {
 
 abstract class _TrackState implements TrackState {
   factory _TrackState(
-      {String trackName,
+      {String editName,
+      String trackName,
       String postalCode,
       String address,
       double latitude,
@@ -246,6 +263,8 @@ abstract class _TrackState implements TrackState {
       String url,
       String memo}) = _$_TrackState;
 
+  @override
+  String get editName;
   @override
   String get trackName;
   @override
