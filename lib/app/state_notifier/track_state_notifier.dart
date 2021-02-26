@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:circuit_diary/app/domain/entity/track.dart';
 import 'package:circuit_diary/app/domain/repository/geo_repository.dart';
+import 'package:circuit_diary/app/domain/repository/track_repository.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +12,7 @@ import 'package:circuit_diary/app/state/track_state.dart';
 class TrackStateNotifier extends StateNotifier<TrackState> {
   TrackStateNotifier(this._read)
       : super(TrackState(
+          trackList: [],
           editName: "",
           trackName: "",
           postalCode: "",
@@ -18,14 +21,54 @@ class TrackStateNotifier extends StateNotifier<TrackState> {
           longitude: 139.839478,
           image: null,
           url: "",
-          memo: "",
+          note: "",
+          isUpdate: false,
+          isSaved: false,
         ));
 
   final T Function<T>() _read;
 
+  TrackRepository get _trackRepository => _read<TrackRepository>();
+
   GeoRepository get _geoRepository => _read<GeoRepository>();
 
   final _picker = ImagePicker();
+
+  // コース作成
+  Future<void> createTrack() async {
+    var track = Track(
+      name: state.trackName,
+      postalCode: state.postalCode,
+      address: state.address,
+      latitude: state.latitude,
+      longitude: state.longitude,
+      imageUrl: state.image?.path ?? "",
+      url: state.url,
+      note: state.note,
+    );
+    await _trackRepository.create(track);
+
+    state.trackList.add(track);
+    state = state.copyWith(
+      isSaved: true,
+    );
+
+    await Future.delayed(Duration(seconds: 2));
+
+    state = state.copyWith(
+      isSaved: false,
+    );
+  }
+
+  // コース一覧取得
+  Future<void> fetchTrackList() async {
+    var trackList = await this._trackRepository.list();
+
+    // TODO error handle
+    state = state.copyWith(
+      trackList: trackList,
+    );
+  }
 
   // 名前入力
   void setTrackName(String value) {
@@ -72,8 +115,8 @@ class TrackStateNotifier extends StateNotifier<TrackState> {
   }
 
   // メモ入力
-  void setMemo(String value) {
-    state = state.copyWith(memo: value);
+  void setNote(String value) {
+    state = state.copyWith(note: value);
   }
 
   // 初期化
@@ -87,7 +130,23 @@ class TrackStateNotifier extends StateNotifier<TrackState> {
       longitude: 139.839478,
       image: null,
       url: "",
-      memo: "",
+      note: "",
+    );
+  }
+
+  // 編集内容をセット
+  void setEdit(Track track) {
+    state = state.copyWith(
+      editName: track.name,
+      trackName: track.name,
+      postalCode: track.postalCode,
+      address: track.address,
+      latitude: track.latitude,
+      longitude: track.longitude,
+      image: track.imageUrl != "" ? File(track.imageUrl) : null,
+      url: track.url,
+      note: track.note,
+      isUpdate: true,
     );
   }
 

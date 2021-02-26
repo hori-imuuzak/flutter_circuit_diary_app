@@ -16,7 +16,7 @@ class EditTrack extends StatelessWidget {
   final _postalCodeText = TextEditingController();
   final _addressText = TextEditingController();
   final _urlText = TextEditingController();
-  final _memoText = TextEditingController();
+  final _noteText = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +24,22 @@ class EditTrack extends StatelessWidget {
         Provider.of<TrackStateNotifier>(context, listen: false);
     final trackState = Provider.of<TrackState>(context, listen: true);
 
+    final List<Widget> actions = [];
+    if (trackState.isUpdate) {
+      actions.add(IconButton(icon: Icon(Icons.delete, color: Colors.white), onPressed: () {}));
+    }
+
     _nameText.value = _nameText.value.copyWith(text: trackState.trackName);
     _postalCodeText.value =
         _postalCodeText.value.copyWith(text: trackState.postalCode);
     _addressText.value = _addressText.value.copyWith(text: trackState.address);
     _urlText.value = _urlText.value.copyWith(text: trackState.url);
-    _memoText.value = _memoText.value.copyWith(text: trackState.memo);
+    _noteText.value = _noteText.value.copyWith(text: trackState.note);
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_getTitle(null)),
+          title: Text(_getTitle(trackState.editName)),
           leading: BackButton(
             color: Colors.white,
             onPressed: () {
@@ -42,6 +47,7 @@ class EditTrack extends StatelessWidget {
               trackStateNotifier.clearEdit();
             },
           ),
+          actions: actions,
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: Space.M),
@@ -156,7 +162,7 @@ class EditTrack extends StatelessWidget {
                     },
                   ),
                   TextFormField(
-                    controller: _memoText,
+                    controller: _noteText,
                     decoration: const InputDecoration(
                       hintText: "営業時間、注意事項など",
                       labelText: "メモ（任意）",
@@ -164,7 +170,7 @@ class EditTrack extends StatelessWidget {
                     maxLines: null,
                     keyboardType: TextInputType.text,
                     onChanged: (String value) {
-                      trackStateNotifier.setMemo(value);
+                      trackStateNotifier.setNote(value);
                     },
                   ),
                 ],
@@ -181,9 +187,11 @@ class EditTrack extends StatelessWidget {
                   if (_formKey.currentState.validate()) {
                     FocusScope.of(context).requestFocus(FocusNode());
                     _formKey.currentState.save();
+
+                    trackStateNotifier.createTrack();
                   }
                 },
-                child: Text("保存する"),
+                child: Text(trackState.isSaved ? "保存しました" : "保存する"),
                 textColor: Colors.white,
               )),
         ),
@@ -191,11 +199,11 @@ class EditTrack extends StatelessWidget {
     );
   }
 
-  String _getTitle(Object car) {
-    if (car == null) {
+  String _getTitle(String editName) {
+    if (editName == "") {
       return "コース追加";
     } else {
-      return "富士スピードウェイを編集";
+      return "$editNameを編集";
     }
   }
 

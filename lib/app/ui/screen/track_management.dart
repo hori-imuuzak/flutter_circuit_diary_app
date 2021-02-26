@@ -10,18 +10,24 @@ class TrackManagement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: TrackList(),
+      body: TrackList(onTapItem: () {
+        toEditTrack(context);
+      }),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).push(_toCreateTrack(_transition));
+            toEditTrack(context);
           },
           child: Icon(Icons.add)
       ),
     );
   }
+
+  void toEditTrack(BuildContext context) {
+    Navigator.of(context).push(_toEditTrack(_transition));
+  }
 }
 
-Route _toCreateTrack(Transition transition) {
+Route _toEditTrack(Transition transition) {
   return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => EditTrack(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:circuit_diary/app/domain/entity/track.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'track_state.freezed.dart';
@@ -8,6 +9,7 @@ part 'track_state.freezed.dart';
 abstract class TrackState with _$TrackState {
 
   factory TrackState({
+    List<Track> trackList,
     String editName,
     String trackName,
     String postalCode,
@@ -16,6 +18,8 @@ abstract class TrackState with _$TrackState {
     double longitude,
     File image,
     String url,
-    String memo,
+    String note,
+    bool isUpdate,
+    bool isSaved,
   }) = _TrackState;
 }

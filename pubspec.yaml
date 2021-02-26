@@ -35,6 +35,10 @@ dependencies:
   cloud_firestore: ^0.16.0+1
   firebase_storage: ^7.0.0
 
+  hive: ^1.4.4+1
+  hive_flutter: ^0.3.1
+  path_provider: ^1.6.27
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
@@ -46,6 +50,7 @@ dev_dependencies:
     sdk: flutter
   build_runner:
   freezed:
+  hive_generator: ^0.8.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
