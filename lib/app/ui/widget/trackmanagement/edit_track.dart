@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:circuit_diary/app/state/track_state.dart';
 import 'package:circuit_diary/app/state_notifier/track_state_notifier.dart';
 import 'package:circuit_diary/app/ui/style.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,17 +24,16 @@ class _EditTrackState extends State<EditTrack> {
 
   final Object track;
 
-  String _trackName;
   String _trackPostalCode;
   LatLng _trackLatLng;
   String _trackUrl;
   String _trackMemo;
   File _file;
   final _formKey = GlobalKey<FormState>();
+  final _trackNameTextController = TextEditingController();
   final _addressTextController = TextEditingController();
   GoogleMapController _mapController;
   final _picker = ImagePicker();
-
 
   @override
   void dispose() {
@@ -45,7 +46,8 @@ class _EditTrackState extends State<EditTrack> {
     final trackStateNotifier = Provider.of<TrackStateNotifier>(context, listen: false);
     final trackState = Provider.of<TrackState>(context, listen: true);
 
-    _addressTextController.value = _addressTextController.value.copyWith(text: trackState.reverseGeoCodeResult);
+    _trackNameTextController.value = _trackNameTextController.value.copyWith(text: trackState.trackName);
+    _addressTextController.value = _addressTextController.value.copyWith(text: trackState.address);
 
     return SafeArea(
       child: Scaffold(
@@ -60,6 +62,7 @@ class _EditTrackState extends State<EditTrack> {
               child: Column(
                 children: [
                   TextFormField(
+                    controller: _trackNameTextController,
                     decoration: const InputDecoration(
                       hintText: "名前を入力してください",
                       labelText: "コース名",
@@ -73,9 +76,7 @@ class _EditTrackState extends State<EditTrack> {
                       return null;
                     },
                     onSaved: (String value) {
-                      setState(() {
-                        _trackName = value;
-                      });
+                      trackStateNotifier.setTrackName(value);
                     },
                   ),
                   TextFormField(
@@ -132,7 +133,7 @@ class _EditTrackState extends State<EditTrack> {
                     child: GoogleMap(
                       mapType: MapType.terrain,
                       initialCameraPosition: CameraPosition(
-                        target: LatLng(35.652832, 139.839478),
+                        target: LatLng(trackState.latitude, trackState.longitude),
                         zoom: 13,
                       ),
                       myLocationEnabled: false,
@@ -151,6 +152,7 @@ class _EditTrackState extends State<EditTrack> {
                           _trackLatLng = latlng;
                         });
                       },
+                      gestureRecognizers: Set()..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer())),
                     ),
                   ),
                   Padding(
