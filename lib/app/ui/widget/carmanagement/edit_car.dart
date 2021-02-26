@@ -7,30 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class EditCar extends StatelessWidget {
+  EditCar({ this.hasAppBar });
+
+  final bool hasAppBar;
 
   final _formKey = GlobalKey<FormState>();
   final _nameText = TextEditingController();
   final _odoText = TextEditingController();
-
-
 
   @override
   Widget build(BuildContext context) {
     final carStateNotifier = Provider.of<CarStateNotifier>(context, listen: false);
     final carState = Provider.of<CarState>(context, listen: true);
 
-    final List<Widget> actions = [];
-    if (carState.isUpdate) {
-      actions.add(IconButton(icon: Icon(Icons.delete, color: Colors.white), onPressed: () {}));
-    }
-
     _nameText.value = _nameText.value.copyWith(text: carState.name);
     _odoText.value = _odoText.value.copyWith(text: carState.odo);
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(_getTitle(carState.editName)),
+        appBar: this.hasAppBar ? AppBar(
+          title: const Text("車両追加"),
           leading: BackButton(
             color: Colors.white,
             onPressed: () {
@@ -38,8 +34,7 @@ class EditCar extends StatelessWidget {
               carStateNotifier.clearEdit();
             },
           ),
-          actions: actions,
-        ),
+        ) : null,
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: Space.M),
           child: Form(
@@ -122,14 +117,6 @@ class EditCar extends StatelessWidget {
       return Image.file(file, width: 256.0);
     } else {
       return Image.asset("images/car_default.png", width: 320.0);
-    }
-  }
-
-  String _getTitle(String editName) {
-    if (editName == "") {
-      return "車両追加";
-    } else {
-      return "$editNameを編集";
     }
   }
 }
