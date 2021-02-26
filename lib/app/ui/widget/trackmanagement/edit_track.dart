@@ -23,7 +23,7 @@ class _EditTrackState extends State<EditTrack> {
   final Object track;
 
   String _trackName;
-  String _trackAddress;
+  String _trackPostalCode;
   LatLng _trackLatLng;
   String _trackUrl;
   String _trackMemo;
@@ -32,6 +32,13 @@ class _EditTrackState extends State<EditTrack> {
   final _addressTextController = TextEditingController();
   GoogleMapController _mapController;
   final _picker = ImagePicker();
+
+
+  @override
+  void dispose() {
+    _addressTextController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +93,7 @@ class _EditTrackState extends State<EditTrack> {
                     },
                     onSaved: (String value) {
                       setState(() {
-                        _trackAddress = value;
+                        _trackPostalCode = value;
                       });
                     },
                   ),
@@ -106,7 +113,7 @@ class _EditTrackState extends State<EditTrack> {
                     },
                     onSaved: (String value) {
                       setState(() {
-                        _trackAddress = value;
+                        _addressTextController.value = _addressTextController.value.copyWith(text: value);
                       });
                     },
                   ),
