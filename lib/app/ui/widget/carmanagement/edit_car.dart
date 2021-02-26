@@ -8,57 +8,34 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class EditCar extends StatefulWidget {
-  EditCar();
+class EditCar extends StatelessWidget {
 
-  @override
-  State createState() => _EditCarState();
-}
-
-class _EditCarState extends State<EditCar> {
-  _EditCarState();
-
-  String _carName;
-  String _carODO;
-  File _file;
   final _formKey = GlobalKey<FormState>();
-  final _picker = ImagePicker();
-
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final carState = Provider.of<CarState>(context, listen: false);
-      final editingCar = carState.editingCar;
-
-      _carName = editingCar.name;
-      _carODO = "${editingCar.odo}";
-    });
-  }
+  final _nameText = TextEditingController();
+  final _odoText = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final carStateNotifier = Provider.of<CarStateNotifier>(context, listen: false);
-    final carState = Provider.of<CarState>(context, listen: false);
-
-    final editingCar = carState.editingCar;
+    final carState = Provider.of<CarState>(context, listen: true);
 
     final List<Widget> actions = [];
-    if (editingCar != null) {
+    if (carState.isUpdate) {
       actions.add(IconButton(icon: Icon(Icons.delete, color: Colors.white), onPressed: () {}));
     }
+
+    _nameText.value = _nameText.value.copyWith(text: carState.name);
+    _odoText.value = _odoText.value.copyWith(text: carState.odo);
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_getTitle(editingCar)),
+          title: Text(_getTitle(null)),
           leading: BackButton(
             color: Colors.white,
             onPressed: () {
               Navigator.of(context).pop();
-              carStateNotifier.editCar(null);
+              carStateNotifier.clearEdit();
             },
           ),
           actions: actions,
@@ -70,42 +47,26 @@ class _EditCarState extends State<EditCar> {
             child: Column(
               children: [
                 TextFormField(
-                  initialValue: editingCar != null ? editingCar.name : "",
+                  controller: _nameText,
                   decoration: const InputDecoration(
                     hintText: "名前を入力してください",
                     labelText: "車両名",
                   ),
-                  validator: (String value) {
-                    if (value.isEmpty) {
-                      return "入力してください";
-                    }
-
-                    return null;
-                  },
+                  validator: carStateNotifier.getEmptyValidator(),
                   onSaved: (String value) {
-                    setState(() {
-                      _carName = value;
-                    });
+                    carStateNotifier.setName(value);
                   },
                 ),
                 TextFormField(
-                  initialValue: editingCar != null ? "${editingCar.odo}" : "",
+                  controller: _odoText,
                   decoration: const InputDecoration(
                     hintText: "走行距離を入力してください",
                     labelText: "走行距離km（初期値）",
                   ),
                   keyboardType: TextInputType.number,
-                  validator: (String value) {
-                    if (value.isEmpty) {
-                      return "入力してください";
-                    }
-
-                    return null;
-                  },
+                  validator: carStateNotifier.getEmptyValidator(),
                   onSaved: (String value) {
-                    setState(() {
-                      _carODO = value;
-                    });
+                    carStateNotifier.setOdo(value);
                   },
                 ),
                 Padding(
@@ -121,20 +82,10 @@ class _EditCarState extends State<EditCar> {
                               textAlign: TextAlign.start,
                               style: TextStyle(fontSize: FontSize.LABEL)),
                           GestureDetector(
-                              onTap: () async {
-                                final pickedImage = await _picker.getImage(
-                                    source: ImageSource.gallery);
-                                setState(() {
-                                  if (pickedImage != null) {
-                                    _file = File(pickedImage.path);
-                                  } else {
-                                    // TODO failed pick
-                                  }
-                                });
-                              },
+                              onTap: carStateNotifier.pickImage,
                               child: Padding(
                                 padding: EdgeInsets.only(top: Space.S),
-                                child: _getImage(),
+                                child: _getImage(carState.image),
                               )),
                         ],
                       ),
@@ -155,11 +106,7 @@ class _EditCarState extends State<EditCar> {
                     FocusScope.of(context).requestFocus(FocusNode());
                     _formKey.currentState.save();
 
-                    carStateNotifier.createCar(Car(
-                      name: _carName,
-                      odo: int.parse(_carODO),
-                      imageUrl: "",
-                    ));
+                    carStateNotifier.createCar();
                   }
                 },
                 child: Text(carState.isSaved ? "保存しました" : "保存する"),
@@ -170,9 +117,9 @@ class _EditCarState extends State<EditCar> {
     );
   }
 
-  Widget _getImage() {
-    if (_file != null) {
-      return Image.file(_file, width: 256.0);
+  Widget _getImage(File file) {
+    if (file != null) {
+      return Image.file(file, width: 256.0);
     } else {
       return Image.asset("images/car_default.png", width: 320.0);
     }

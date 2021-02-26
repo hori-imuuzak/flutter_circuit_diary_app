@@ -24,7 +24,7 @@ class CarList extends StatelessWidget {
         odo: "${car.odo}km",
         imageUrl: car.imageUrl,
         onTap: () {
-          carStateNotifier.editCar(car);
+          carStateNotifier.setEdit(car);
           this.onTapItem();
         }
       ));

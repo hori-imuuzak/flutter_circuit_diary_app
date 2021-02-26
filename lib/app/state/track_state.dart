@@ -1,23 +1,20 @@
 import 'dart:io';
 
-class TrackState {
-  TrackState({
-    this.trackName,
-    this.postalCode,
-    this.address,
-    this.latitude,
-    this.longitude,
-    this.image,
-    this.url,
-    this.memo,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final String trackName;
-  final String postalCode;
-  final String address;
-  final double latitude;
-  final double longitude;
-  final File image;
-  final String url;
-  final String memo;
+part 'track_state.freezed.dart';
+
+@freezed
+abstract class TrackState with _$TrackState {
+
+  factory TrackState({
+    String trackName,
+    String postalCode,
+    String address,
+    double latitude,
+    double longitude,
+    File image,
+    String url,
+    String memo,
+  }) = _TrackState;
 }

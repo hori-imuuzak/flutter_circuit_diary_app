@@ -7,52 +7,60 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class EditTrack extends StatefulWidget {
-  EditTrack({this.track});
-
-  final Object track;
+  EditTrack();
 
   @override
-  State createState() => _EditTrackState(track: this.track);
+  State createState() => _EditTrackState();
 }
 
 class _EditTrackState extends State<EditTrack> {
-  _EditTrackState({this.track});
+  _EditTrackState();
 
-  final Object track;
-
-  String _trackPostalCode;
-  LatLng _trackLatLng;
-  String _trackUrl;
-  String _trackMemo;
-  File _file;
   final _formKey = GlobalKey<FormState>();
-  final _trackNameTextController = TextEditingController();
-  final _addressTextController = TextEditingController();
-  GoogleMapController _mapController;
-  final _picker = ImagePicker();
+  final _nameText = TextEditingController();
+  final _postalCodeText = TextEditingController();
+  final _addressText = TextEditingController();
+  final _urlText = TextEditingController();
+  final _memoText = TextEditingController();
 
   @override
   void dispose() {
-    _addressTextController.dispose();
+    _nameText.dispose();
+    _postalCodeText.dispose();
+    _addressText.dispose();
+    _urlText.dispose();
+    _memoText.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final trackStateNotifier = Provider.of<TrackStateNotifier>(context, listen: false);
+    final trackStateNotifier =
+        Provider.of<TrackStateNotifier>(context, listen: false);
     final trackState = Provider.of<TrackState>(context, listen: true);
 
-    _trackNameTextController.value = _trackNameTextController.value.copyWith(text: trackState.trackName);
-    _addressTextController.value = _addressTextController.value.copyWith(text: trackState.address);
+    _nameText.value = _nameText.value.copyWith(text: trackState.trackName);
+    _postalCodeText.value =
+        _postalCodeText.value.copyWith(text: trackState.postalCode);
+    _addressText.value = _addressText.value.copyWith(text: trackState.address);
+    _urlText.value = _urlText.value.copyWith(text: trackState.url);
+    _memoText.value = _memoText.value.copyWith(text: trackState.memo);
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_getTitle(this.track)),
+          title: Text(_getTitle(null)),
+          leading: BackButton(
+            color: Colors.white,
+            onPressed: () {
+              Navigator.of(context).pop();
+              trackStateNotifier.clearEdit();
+            },
+          ),
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: Space.M),
@@ -62,60 +70,39 @@ class _EditTrackState extends State<EditTrack> {
               child: Column(
                 children: [
                   TextFormField(
-                    controller: _trackNameTextController,
+                    controller: _nameText,
                     decoration: const InputDecoration(
                       hintText: "名前を入力してください",
                       labelText: "コース名",
                     ),
                     keyboardType: TextInputType.text,
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return "入力してください";
-                      }
-
-                      return null;
-                    },
+                    validator: trackStateNotifier.getEmptyValidator(),
                     onSaved: (String value) {
                       trackStateNotifier.setTrackName(value);
                     },
                   ),
                   TextFormField(
+                    controller: _postalCodeText,
                     decoration: const InputDecoration(
                       hintText: "郵便番号を入力してください",
                       labelText: "郵便番号（ハイフン-なし）",
                     ),
                     keyboardType: TextInputType.number,
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return "入力してください";
-                      }
-
-                      return null;
-                    },
-                    onSaved: (String value) {
-                      setState(() {
-                        _trackPostalCode = value;
-                      });
+                    validator: trackStateNotifier.getEmptyValidator(),
+                    onChanged: (String value) {
+                      trackStateNotifier.setPostalCode(value);
                     },
                   ),
                   TextFormField(
-                    controller: _addressTextController,
+                    controller: _addressText,
                     decoration: const InputDecoration(
                       hintText: "所在地を入力してください",
                       labelText: "所在地",
                     ),
                     keyboardType: TextInputType.streetAddress,
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return "入力してください";
-                      }
-
-                      return null;
-                    },
+                    validator: trackStateNotifier.getEmptyValidator(),
                     onSaved: (String value) {
-                      setState(() {
-                        _addressTextController.value = _addressTextController.value.copyWith(text: value);
-                      });
+                      trackStateNotifier.setAddress(value);
                     },
                   ),
                   Padding(
@@ -133,26 +120,24 @@ class _EditTrackState extends State<EditTrack> {
                     child: GoogleMap(
                       mapType: MapType.terrain,
                       initialCameraPosition: CameraPosition(
-                        target: LatLng(trackState.latitude, trackState.longitude),
+                        target:
+                            LatLng(trackState.latitude, trackState.longitude),
                         zoom: 13,
                       ),
                       myLocationEnabled: false,
                       myLocationButtonEnabled: false,
-                      markers: _getMarkers(),
-                      onMapCreated: (GoogleMapController controller) {
-                        setState(() {
-                          _mapController = controller;
-                        });
-                      },
+                      markers: _getMarkers(
+                          trackState.latitude, trackState.longitude),
+                      onMapCreated: (GoogleMapController controller) {},
                       zoomControlsEnabled: true,
                       zoomGesturesEnabled: true,
                       onTap: (LatLng latlng) {
-                        trackStateNotifier.reverseGeoCoding(latlng.latitude, latlng.longitude);
-                        setState(() {
-                          _trackLatLng = latlng;
-                        });
+                        trackStateNotifier.reverseGeoCoding(
+                            latlng.latitude, latlng.longitude);
                       },
-                      gestureRecognizers: Set()..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer())),
+                      gestureRecognizers: Set()
+                        ..add(Factory<PanGestureRecognizer>(
+                            () => PanGestureRecognizer())),
                     ),
                   ),
                   Padding(
@@ -168,20 +153,10 @@ class _EditTrackState extends State<EditTrack> {
                                 textAlign: TextAlign.start,
                                 style: TextStyle(fontSize: FontSize.LABEL)),
                             GestureDetector(
-                                onTap: () async {
-                                  final pickedImage = await _picker.getImage(
-                                      source: ImageSource.gallery);
-                                  setState(() {
-                                    if (pickedImage != null) {
-                                      _file = File(pickedImage.path);
-                                    } else {
-                                      // TODO failed pick
-                                    }
-                                  });
-                                },
+                                onTap: trackStateNotifier.pickImage,
                                 child: Padding(
                                   padding: EdgeInsets.only(top: Space.S),
-                                  child: _getImage(),
+                                  child: _getImage(trackState.image),
                                 )),
                           ],
                         ),
@@ -189,18 +164,18 @@ class _EditTrackState extends State<EditTrack> {
                     ),
                   ),
                   TextFormField(
+                    controller: _urlText,
                     decoration: const InputDecoration(
                       hintText: "URLを入力してください。",
                       labelText: "URL（任意）",
                     ),
                     keyboardType: TextInputType.url,
                     onSaved: (String value) {
-                      setState(() {
-                        _trackUrl = value;
-                      });
+                      trackStateNotifier.setUrl(value);
                     },
                   ),
                   TextFormField(
+                    controller: _memoText,
                     decoration: const InputDecoration(
                       hintText: "営業時間、注意事項など",
                       labelText: "メモ（任意）",
@@ -208,9 +183,7 @@ class _EditTrackState extends State<EditTrack> {
                     maxLines: null,
                     keyboardType: TextInputType.text,
                     onSaved: (String value) {
-                      setState(() {
-                        _trackMemo = value;
-                      });
+                      trackStateNotifier.setMemo(value);
                     },
                   ),
                 ],
@@ -221,17 +194,17 @@ class _EditTrackState extends State<EditTrack> {
         bottomNavigationBar: Padding(
           padding: EdgeInsets.all(Space.S),
           child: ButtonTheme(
-            minWidth: double.infinity,
-            child: RaisedButton(
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  _formKey.currentState.save();
-                }
-              },
-              child: Text("保存する"),
-              textColor: Colors.white,
-            )),
+              minWidth: double.infinity,
+              child: RaisedButton(
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    _formKey.currentState.save();
+                  }
+                },
+                child: Text("保存する"),
+                textColor: Colors.white,
+              )),
         ),
       ),
     );
@@ -245,18 +218,17 @@ class _EditTrackState extends State<EditTrack> {
     }
   }
 
-  Set<Marker> _getMarkers() {
+  Set<Marker> _getMarkers(double latitude, double longitude) {
     final markers = Set<Marker>();
-    if (_trackLatLng != null) {
-      markers.add(Marker(markerId: MarkerId("mark"), position: _trackLatLng));
-    }
+    markers.add(Marker(
+        markerId: MarkerId("mark"), position: LatLng(latitude, longitude)));
 
     return markers;
   }
 
-  Widget _getImage() {
-    if (_file != null) {
-      return Image.file(_file, width: 256.0);
+  Widget _getImage(File file) {
+    if (file != null) {
+      return Image.file(file, width: 256.0);
     } else {
       return Image.asset("images/track_default.png", width: 320.0);
     }
