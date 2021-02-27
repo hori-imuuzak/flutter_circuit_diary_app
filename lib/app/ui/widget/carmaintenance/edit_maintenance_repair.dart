@@ -70,19 +70,6 @@ class EditMaintenanceRepair extends StatelessWidget {
                     onChanged: (String value) {},
                   ),
                   TextFormField(
-                    controller: _priceText,
-                    decoration: const InputDecoration(
-                      hintText: "価格を入力してください。",
-                      labelText: "価格（任意）",
-                    ),
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                    validator: (String value) {
-                      return "";
-                    },
-                    onChanged: (String value) {},
-                  ),
-                  TextFormField(
                     controller: _noteText,
                     decoration: const InputDecoration(
                       hintText: "メモを入力してください。",

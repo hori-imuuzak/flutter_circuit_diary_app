@@ -1,15 +1,11 @@
-class CarMaintenance {
+import 'package:circuit_diary/app/domain/entity/maintenance_type.dart';
+
+abstract class CarMaintenance {
   CarMaintenance({
-    this.name,
-    this.odo,
-    this.price,
-    this.note,
+    this.type,
     this.doneAt,
   });
 
-  final String name;
-  final int odo;
-  final int price;
-  final String note;
+  final MaintenanceType type;
   final DateTime doneAt;
 }
