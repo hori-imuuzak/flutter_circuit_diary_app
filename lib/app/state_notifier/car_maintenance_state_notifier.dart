@@ -31,16 +31,62 @@ class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
     }
   }
 
+  // ガソリンの初期設定
+  void setGas(Gas gas) {
+    state = state.copyWith(editingGas: gas, isUpdate: true);
+  }
+  // ガソリンの編集
+  void editGas({ DateTime doneAt, String liter, String price }) {
+    final editingGas = state.editingGas;
+
+    var nextLiter = editingGas?.liter;
+    if (liter == "") {
+      nextLiter = null;
+    } else if (liter != null) {
+      nextLiter = int.tryParse(liter) ?? editingGas?.liter;
+    }
+
+    var nextPrice = editingGas?.price;
+    if (price == "") {
+      nextPrice = null;
+    } else if (price != null) {
+      nextPrice = int.tryParse(price) ?? editingGas?.price;
+    }
+
+    final gas = Gas(
+      doneAt: doneAt ?? editingGas?.doneAt,
+      liter: nextLiter,
+      price: nextPrice,
+    );
+
+    state = state.copyWith(editingGas: gas);
+  }
+  // ガソリンの保存
+  Future<void> saveGas() async {
+    print(state.editingGas.doneAt);
+    print(state.editingGas.liter);
+    print(state.editingGas.price);
+  }
+
   // 経費の初期設定
   void setCost(Cost cost) {
     state = state.copyWith(editingCost: cost, isUpdate: true);
   }
   // 経費の編集
   void editCost({ DateTime doneAt, String name, String price }) {
-    var cost = Cost(
-      doneAt: doneAt ?? state.editingCost?.doneAt,
-      name: name ?? state.editingCost?.name,
-      price: int.tryParse(price) ?? state.editingCost?.price,
+    final editingCost = state.editingCost;
+
+    var nextPrice = editingCost?.price;
+    if (price == "") {
+      nextPrice = null;
+    } else if (price != null) {
+      nextPrice = int.tryParse(price) ?? editingCost?.price;
+    }
+
+    final cost = Cost(
+      doneAt: doneAt ?? editingCost?.doneAt,
+      name: name ?? editingCost?.name,
+      price: nextPrice,
     );
 
     state = state.copyWith(editingCost: cost);

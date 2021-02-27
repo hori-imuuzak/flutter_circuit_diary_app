@@ -22,8 +22,8 @@ class EditMaintenanceCost extends StatelessWidget {
     _dateText.value =
         _dateText.value.copyWith(text: editingCost?.doneAt?.toString() ?? "");
     _nameText.value = _nameText.value.copyWith(text: editingCost?.name ?? "");
-    _priceText.value = _priceText.value.copyWith(
-        text: editingCost?.price != null ? "${editingCost?.price}" : "");
+    _priceText.value =
+        _priceText.value.copyWith(text: editingCost?.price?.toString() ?? "");
 
     return SafeArea(
       child: Scaffold(
@@ -64,6 +64,7 @@ class EditMaintenanceCost extends StatelessWidget {
                     labelText: "経費名",
                   ),
                   validator: maintenanceStateNotifier.getEmptyValidator(),
+                  keyboardType: TextInputType.text,
                   onChanged: (String value) {
                     maintenanceStateNotifier.editCost(name: value);
                   },

@@ -1,19 +1,38 @@
+import 'package:circuit_diary/app/state/car_maintenance_state.dart';
+import 'package:circuit_diary/app/state_notifier/car_maintenance_state_notifier.dart';
 import 'package:circuit_diary/app/ui/style.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditMaintenanceGas extends StatelessWidget {
   final _dateText = TextEditingController();
-  final _amountText = TextEditingController();
+  final _literText = TextEditingController();
   final _priceText = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final maintenanceStateNotifier =
+        Provider.of<CarMaintenanceStateNotifier>(context, listen: false);
+    final maintenanceState =
+        Provider.of<CarMaintenanceState>(context, listen: true);
+
+    final editingGas = maintenanceState.editingGas;
+    _dateText.value =
+        _dateText.value.copyWith(text: editingGas?.doneAt?.toString() ?? "");
+    _literText.value =
+        _literText.value.copyWith(text: editingGas?.liter?.toString() ?? "");
+    _priceText.value =
+        _priceText.value.copyWith(text: editingGas?.price?.toString() ?? "");
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: const Text("ガソリン"),
+          leading: BackButton(onPressed: () {
+            maintenanceStateNotifier.clear();
+            Navigator.of(context).pop();
+          }),
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: Space.M),
@@ -26,9 +45,7 @@ class EditMaintenanceGas extends StatelessWidget {
                   decoration: const InputDecoration(
                     labelText: "発生日",
                   ),
-                  validator: (String value) {
-                    return "";
-                  },
+                  validator: maintenanceStateNotifier.getEmptyValidator(),
                   readOnly: true,
                   onTap: () async {
                     final picked = await showDatePicker(
@@ -37,21 +54,20 @@ class EditMaintenanceGas extends StatelessWidget {
                       firstDate: DateTime.now().add(new Duration(days: -365)),
                       lastDate: DateTime.now().add(new Duration(days: 365)),
                     );
-                    print(picked);
-                    _dateText.value = _dateText.value.copyWith(text: "2021/02/27");
+                    maintenanceStateNotifier.editGas(doneAt: picked);
                   },
                 ),
                 TextFormField(
-                  controller: _amountText,
+                  controller: _literText,
                   decoration: const InputDecoration(
                     hintText: "給油量を入力してください",
                     labelText: "給油量（リットル）",
                   ),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  validator: (String value) {
-                    return "";
+                  validator: maintenanceStateNotifier.getEmptyValidator(),
+                  onChanged: (String value) {
+                    maintenanceStateNotifier.editGas(liter: value);
                   },
-                  onChanged: (String value) {},
                 ),
                 TextFormField(
                   controller: _priceText,
@@ -60,10 +76,9 @@ class EditMaintenanceGas extends StatelessWidget {
                     labelText: "価格（任意）",
                   ),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  validator: (String value) {
-                    return "";
+                  onChanged: (String value) {
+                    maintenanceStateNotifier.editGas(price: value);
                   },
-                  onChanged: (String value) {},
                 ),
               ],
             ),
@@ -75,12 +90,12 @@ class EditMaintenanceGas extends StatelessWidget {
               minWidth: double.infinity,
               child: RaisedButton(
                 onPressed: () {
-                  // if (_formKey.currentState.validate()) {
-                  //   FocusScope.of(context).requestFocus(FocusNode());
-                  //   _formKey.currentState.save();
-                  //
-                  //   trackStateNotifier.createTrack();
-                  // }
+                  if (_formKey.currentState.validate()) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    _formKey.currentState.save();
+
+                    maintenanceStateNotifier.saveGas();
+                  }
                 },
                 child: Text("保存する"),
                 textColor: Colors.white,
