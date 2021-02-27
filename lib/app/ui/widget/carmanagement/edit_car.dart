@@ -56,7 +56,7 @@ class EditCar extends StatelessWidget {
                   controller: _odoText,
                   decoration: const InputDecoration(
                     hintText: "走行距離を入力してください",
-                    labelText: "走行距離km（初期値）",
+                    labelText: "走行距離(km)",
                   ),
                   keyboardType: TextInputType.number,
                   validator: carStateNotifier.getEmptyValidator(),
