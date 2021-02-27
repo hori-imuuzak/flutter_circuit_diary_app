@@ -8,7 +8,7 @@ class Cost implements CarMaintenance {
     this.price,
   });
 
-  final int name;
+  final String name;
   final int price;
 
   final type = MaintenanceType.Cost;

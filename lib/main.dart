@@ -15,6 +15,8 @@ import 'package:circuit_diary/app/domain/repository/geo_repository.dart';
 
 import 'package:circuit_diary/app/state/car_state.dart';
 import 'package:circuit_diary/app/state_notifier/car_state_notifier.dart';
+import 'package:circuit_diary/app/state/car_maintenance_state.dart';
+import 'package:circuit_diary/app/state_notifier/car_maintenance_state_notifier.dart';
 import 'package:circuit_diary/app/state/track_state.dart';
 import 'package:circuit_diary/app/state_notifier/track_state_notifier.dart';
 
@@ -77,12 +79,15 @@ Widget circuitDiary() {
     providers: [
       // repositories
       Provider<CarRepository>(create: (_) => FirebaseCarRepository()),
-      Provider<MaintenanceRepository>(create: (_) => FirebaseMaintenanceRepository()),
+      Provider<MaintenanceRepository>(
+          create: (_) => FirebaseMaintenanceRepository()),
       Provider<TrackRepository>(create: (_) => HiveTrackRepository()),
       Provider<GeoRepository>(create: (_) => GoogleMapGeoRepository()),
       // notifiers
       StateNotifierProvider<CarStateNotifier, CarState>(
           create: (context) => CarStateNotifier(context.read)),
+      StateNotifierProvider<CarMaintenanceStateNotifier, CarMaintenanceState>(
+          create: (context) => CarMaintenanceStateNotifier(context.read)),
       StateNotifierProvider<TrackStateNotifier, TrackState>(
           create: (context) => TrackStateNotifier(context.read)),
     ],

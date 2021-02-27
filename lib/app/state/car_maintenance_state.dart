@@ -1,4 +1,3 @@
-import 'package:circuit_diary/app/domain/entity/car.dart';
 import 'package:circuit_diary/app/domain/entity/cost.dart';
 import 'package:circuit_diary/app/domain/entity/gas.dart';
 import 'package:circuit_diary/app/domain/entity/car_maintenance.dart';
@@ -12,7 +11,7 @@ part 'car_maintenance_state.freezed.dart';
 abstract class CarMaintenanceState with _$CarMaintenanceState {
 
   factory CarMaintenanceState({
-    Car car,
+    String carUid,
     List<CarMaintenance> maintenanceList,
 
     Repair editingRepair,

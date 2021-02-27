@@ -1,6 +1,9 @@
+import 'package:circuit_diary/app/state/car_maintenance_state.dart';
+import 'package:circuit_diary/app/state_notifier/car_maintenance_state_notifier.dart';
 import 'package:circuit_diary/app/ui/style.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditMaintenanceCost extends StatelessWidget {
   final _dateText = TextEditingController();
@@ -10,10 +13,26 @@ class EditMaintenanceCost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final maintenanceStateNotifier =
+        Provider.of<CarMaintenanceStateNotifier>(context, listen: false);
+    final maintenanceState =
+        Provider.of<CarMaintenanceState>(context, listen: true);
+
+    final editingCost = maintenanceState.editingCost;
+    _dateText.value =
+        _dateText.value.copyWith(text: editingCost?.doneAt?.toString() ?? "");
+    _nameText.value = _nameText.value.copyWith(text: editingCost?.name ?? "");
+    _priceText.value = _priceText.value.copyWith(
+        text: editingCost?.price != null ? "${editingCost?.price}" : "");
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: const Text("経費"),
+          leading: BackButton(onPressed: () {
+            maintenanceStateNotifier.clear();
+            Navigator.of(context).pop();
+          }),
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: Space.M),
@@ -26,9 +45,7 @@ class EditMaintenanceCost extends StatelessWidget {
                   decoration: const InputDecoration(
                     labelText: "発生日",
                   ),
-                  validator: (String value) {
-                    return "";
-                  },
+                  validator: maintenanceStateNotifier.getEmptyValidator(),
                   readOnly: true,
                   onTap: () async {
                     final picked = await showDatePicker(
@@ -37,8 +54,7 @@ class EditMaintenanceCost extends StatelessWidget {
                       firstDate: DateTime.now().add(new Duration(days: -365)),
                       lastDate: DateTime.now().add(new Duration(days: 365)),
                     );
-                    print(picked);
-                    _dateText.value = _dateText.value.copyWith(text: "2021/02/27");
+                    maintenanceStateNotifier.editCost(doneAt: picked);
                   },
                 ),
                 TextFormField(
@@ -47,10 +63,10 @@ class EditMaintenanceCost extends StatelessWidget {
                     hintText: "例：自動車税",
                     labelText: "経費名",
                   ),
-                  validator: (String value) {
-                    return "";
+                  validator: maintenanceStateNotifier.getEmptyValidator(),
+                  onChanged: (String value) {
+                    maintenanceStateNotifier.editCost(name: value);
                   },
-                  onChanged: (String value) {},
                 ),
                 TextFormField(
                   controller: _priceText,
@@ -59,10 +75,9 @@ class EditMaintenanceCost extends StatelessWidget {
                     labelText: "価格（任意）",
                   ),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  validator: (String value) {
-                    return "";
+                  onChanged: (String value) {
+                    maintenanceStateNotifier.editCost(price: value);
                   },
-                  onChanged: (String value) {},
                 ),
               ],
             ),
@@ -74,12 +89,12 @@ class EditMaintenanceCost extends StatelessWidget {
               minWidth: double.infinity,
               child: RaisedButton(
                 onPressed: () {
-                  // if (_formKey.currentState.validate()) {
-                  //   FocusScope.of(context).requestFocus(FocusNode());
-                  //   _formKey.currentState.save();
-                  //
-                  //   trackStateNotifier.createTrack();
-                  // }
+                  if (_formKey.currentState.validate()) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    _formKey.currentState.save();
+
+                    maintenanceStateNotifier.saveCost();
+                  }
                 },
                 child: Text("保存する"),
                 textColor: Colors.white,

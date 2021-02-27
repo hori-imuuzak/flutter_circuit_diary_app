@@ -15,7 +15,7 @@ class _$CarMaintenanceStateTearOff {
 
 // ignore: unused_element
   _CarMaintenanceState call(
-      {Car car,
+      {String carUid,
       List<CarMaintenance> maintenanceList,
       Repair editingRepair,
       Gas editingGas,
@@ -23,7 +23,7 @@ class _$CarMaintenanceStateTearOff {
       bool isUpdate,
       bool isSaved}) {
     return _CarMaintenanceState(
-      car: car,
+      carUid: carUid,
       maintenanceList: maintenanceList,
       editingRepair: editingRepair,
       editingGas: editingGas,
@@ -40,7 +40,7 @@ const $CarMaintenanceState = _$CarMaintenanceStateTearOff();
 
 /// @nodoc
 mixin _$CarMaintenanceState {
-  Car get car;
+  String get carUid;
   List<CarMaintenance> get maintenanceList;
   Repair get editingRepair;
   Gas get editingGas;
@@ -58,7 +58,7 @@ abstract class $CarMaintenanceStateCopyWith<$Res> {
           CarMaintenanceState value, $Res Function(CarMaintenanceState) then) =
       _$CarMaintenanceStateCopyWithImpl<$Res>;
   $Res call(
-      {Car car,
+      {String carUid,
       List<CarMaintenance> maintenanceList,
       Repair editingRepair,
       Gas editingGas,
@@ -78,7 +78,7 @@ class _$CarMaintenanceStateCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object car = freezed,
+    Object carUid = freezed,
     Object maintenanceList = freezed,
     Object editingRepair = freezed,
     Object editingGas = freezed,
@@ -87,7 +87,7 @@ class _$CarMaintenanceStateCopyWithImpl<$Res>
     Object isSaved = freezed,
   }) {
     return _then(_value.copyWith(
-      car: car == freezed ? _value.car : car as Car,
+      carUid: carUid == freezed ? _value.carUid : carUid as String,
       maintenanceList: maintenanceList == freezed
           ? _value.maintenanceList
           : maintenanceList as List<CarMaintenance>,
@@ -111,7 +111,7 @@ abstract class _$CarMaintenanceStateCopyWith<$Res>
       __$CarMaintenanceStateCopyWithImpl<$Res>;
   @override
   $Res call(
-      {Car car,
+      {String carUid,
       List<CarMaintenance> maintenanceList,
       Repair editingRepair,
       Gas editingGas,
@@ -133,7 +133,7 @@ class __$CarMaintenanceStateCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object car = freezed,
+    Object carUid = freezed,
     Object maintenanceList = freezed,
     Object editingRepair = freezed,
     Object editingGas = freezed,
@@ -142,7 +142,7 @@ class __$CarMaintenanceStateCopyWithImpl<$Res>
     Object isSaved = freezed,
   }) {
     return _then(_CarMaintenanceState(
-      car: car == freezed ? _value.car : car as Car,
+      carUid: carUid == freezed ? _value.carUid : carUid as String,
       maintenanceList: maintenanceList == freezed
           ? _value.maintenanceList
           : maintenanceList as List<CarMaintenance>,
@@ -161,7 +161,7 @@ class __$CarMaintenanceStateCopyWithImpl<$Res>
 /// @nodoc
 class _$_CarMaintenanceState implements _CarMaintenanceState {
   _$_CarMaintenanceState(
-      {this.car,
+      {this.carUid,
       this.maintenanceList,
       this.editingRepair,
       this.editingGas,
@@ -170,7 +170,7 @@ class _$_CarMaintenanceState implements _CarMaintenanceState {
       this.isSaved});
 
   @override
-  final Car car;
+  final String carUid;
   @override
   final List<CarMaintenance> maintenanceList;
   @override
@@ -186,15 +186,15 @@ class _$_CarMaintenanceState implements _CarMaintenanceState {
 
   @override
   String toString() {
-    return 'CarMaintenanceState(car: $car, maintenanceList: $maintenanceList, editingRepair: $editingRepair, editingGas: $editingGas, editingCost: $editingCost, isUpdate: $isUpdate, isSaved: $isSaved)';
+    return 'CarMaintenanceState(carUid: $carUid, maintenanceList: $maintenanceList, editingRepair: $editingRepair, editingGas: $editingGas, editingCost: $editingCost, isUpdate: $isUpdate, isSaved: $isSaved)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is _CarMaintenanceState &&
-            (identical(other.car, car) ||
-                const DeepCollectionEquality().equals(other.car, car)) &&
+            (identical(other.carUid, carUid) ||
+                const DeepCollectionEquality().equals(other.carUid, carUid)) &&
             (identical(other.maintenanceList, maintenanceList) ||
                 const DeepCollectionEquality()
                     .equals(other.maintenanceList, maintenanceList)) &&
@@ -217,7 +217,7 @@ class _$_CarMaintenanceState implements _CarMaintenanceState {
   @override
   int get hashCode =>
       runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(car) ^
+      const DeepCollectionEquality().hash(carUid) ^
       const DeepCollectionEquality().hash(maintenanceList) ^
       const DeepCollectionEquality().hash(editingRepair) ^
       const DeepCollectionEquality().hash(editingGas) ^
@@ -234,7 +234,7 @@ class _$_CarMaintenanceState implements _CarMaintenanceState {
 
 abstract class _CarMaintenanceState implements CarMaintenanceState {
   factory _CarMaintenanceState(
-      {Car car,
+      {String carUid,
       List<CarMaintenance> maintenanceList,
       Repair editingRepair,
       Gas editingGas,
@@ -243,7 +243,7 @@ abstract class _CarMaintenanceState implements CarMaintenanceState {
       bool isSaved}) = _$_CarMaintenanceState;
 
   @override
-  Car get car;
+  String get carUid;
   @override
   List<CarMaintenance> get maintenanceList;
   @override
