@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 
 import 'package:circuit_diary/app/domain/repository/car_repository.dart';
+import 'package:circuit_diary/app/domain/repository/maintenance_repository.dart';
 import 'package:circuit_diary/app/domain/repository/track_repository.dart';
 import 'package:circuit_diary/app/domain/repository/geo_repository.dart';
 
@@ -21,6 +22,7 @@ import 'package:circuit_diary/app/ui/screen/car_management.dart';
 import 'package:circuit_diary/app/ui/screen/track_management.dart';
 
 import 'package:circuit_diary/app/infrastructure/firebase/firebase_car_repository.dart';
+import 'package:circuit_diary/app/infrastructure/firebase/firebase_maintenance_repository.dart';
 import 'package:circuit_diary/app/infrastructure/hive/hive_track_repository.dart';
 import 'package:circuit_diary/app/infrastructure/hive/entity/hive_track.dart';
 import 'package:circuit_diary/app/infrastructure/googlemap/googlemap_geo_repository.dart';
@@ -75,6 +77,7 @@ Widget circuitDiary() {
     providers: [
       // repositories
       Provider<CarRepository>(create: (_) => FirebaseCarRepository()),
+      Provider<MaintenanceRepository>(create: (_) => FirebaseMaintenanceRepository()),
       Provider<TrackRepository>(create: (_) => HiveTrackRepository()),
       Provider<GeoRepository>(create: (_) => GoogleMapGeoRepository()),
       // notifiers
