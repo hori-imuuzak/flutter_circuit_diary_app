@@ -19,7 +19,7 @@ class CarItem extends StatelessWidget {
                     top: BorderSide.none,
                     left: BorderSide.none,
                     right: BorderSide.none,
-                    bottom: BorderSide(width: 1.0, color: Colors.grey))),
+                    bottom: BorderSide(width: 0.0, color: Colors.grey))),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [

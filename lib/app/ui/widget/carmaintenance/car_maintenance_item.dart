@@ -18,21 +18,32 @@ class CarMaintenanceItem extends StatelessWidget {
                     top: BorderSide.none,
                     left: BorderSide.none,
                     right: BorderSide.none,
-                    bottom: BorderSide(width: 1.0, color: Colors.grey))),
+                    bottom: BorderSide(width: 0.0, color: Colors.grey))),
             child: Padding(
-              padding: EdgeInsets.all(Space.S),
+              padding: EdgeInsets.symmetric(horizontal: Space.S),
               child: Row(
                 children: [
                   // アイコン
-                  Container(
-                      width: 44.0,
-                      height: 44.0,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: _getTypeColor(type)),
-                      child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: SvgIcon(
-                              assetName: _getIconName(type), size: 24))),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: 10,
+                        height: 66,
+                        color: Colors.black,
+                      ),
+                      Container(
+                          width: 44.0,
+                          height: 44.0,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _getTypeColor(type)),
+                          child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: SvgIcon(
+                                  assetName: _getIconName(type), size: 24))),
+                    ],
+                  ),
                   Expanded(
                       child: Padding(
                           padding: EdgeInsets.only(left: Space.XS),
