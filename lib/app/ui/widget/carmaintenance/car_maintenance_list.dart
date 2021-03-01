@@ -1,4 +1,5 @@
 import 'package:circuit_diary/app/domain/entity/maintenance_type.dart';
+import 'package:circuit_diary/app/state_notifier/car_maintenance_state_notifier.dart';
 import 'package:circuit_diary/app/ui/style.dart';
 import 'package:circuit_diary/app/ui/widget/carmaintenance/car_maintenance_item.dart';
 import 'package:circuit_diary/app/ui/widget/carmaintenance/edit_maintenance_cost.dart';
@@ -8,12 +9,15 @@ import 'package:circuit_diary/app/ui/widget/icon/svg_icon.dart';
 import 'package:circuit_diary/app/ui/widget/transition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:provider/provider.dart';
 
 class CarMaintenanceList extends StatelessWidget {
   final _transition = Transition();
 
   @override
   Widget build(BuildContext context) {
+    final carMaintenanceState = Provider.of<CarMaintenanceStateNotifier>(context, listen: false);
+
     return Scaffold(
       body: ListView.builder(
           itemCount: 3,
@@ -36,6 +40,7 @@ class CarMaintenanceList extends StatelessWidget {
             backgroundColor: ThemeColor.Repair,
             label: "整備・修理",
             onTap: () {
+              carMaintenanceState.initRepair();
               Navigator.of(context).push(_toEditMaintenance(_transition, EditMaintenanceRepair()));
             },
           ),
