@@ -1,6 +1,7 @@
 import 'package:circuit_diary/app/domain/entity/car_maintenance.dart';
 import 'package:circuit_diary/app/domain/entity/cost.dart';
 import 'package:circuit_diary/app/domain/entity/gas.dart';
+import 'package:circuit_diary/app/domain/entity/maintenance_item.dart';
 import 'package:circuit_diary/app/domain/entity/maintenance_type.dart';
 import 'package:circuit_diary/app/domain/entity/repair.dart';
 import 'package:circuit_diary/app/domain/repository/maintenance_repository.dart';
@@ -20,26 +21,37 @@ class FirebaseMaintenanceRepository implements MaintenanceRepository {
           .collection("maintenance")
           .get();
 
-      List<CarMaintenance> maintenances = [];
+      List<CarMaintenance> maintenanceList = [];
       snapshots.docs.forEach((doc) {
         final data = doc.data();
         switch (maintenanceTypeStrToMaintenanceType[data["type"] ?? ""]) {
           case MaintenanceType.Repair:
-            maintenances.add(Repair(
+            final List<MaintenanceItem> maintenanceItemList = [];
+            // final res = await doc.reference.collection("maintenance_item").get();
+            // res.docs.map((item) {
+            //   maintenanceItemList.add(MaintenanceItem(
+            //     name: item.data()["name"],
+            //     price: item.data()["price"],
+            //   ));
+            // });
+            
+            maintenanceList.add(Repair(
               doneAt: (data["doneAt"] as Timestamp).toDate(),
+              title: data["title"],
+              maintenanceItemList: maintenanceItemList,
               odo: data["odo"],
               note: data["note"],
             ));
             break;
           case MaintenanceType.Gas:
-            maintenances.add(Gas(
+            maintenanceList.add(Gas(
               doneAt: (data["doneAt"] as Timestamp).toDate(),
               liter: data["liter"],
               price: data["price"],
             ));
             break;
           case MaintenanceType.Cost:
-            maintenances.add(Cost(
+            maintenanceList.add(Cost(
               doneAt: (data["doneAt"] as Timestamp).toDate(),
               name: data["name"],
               price: data["price"],
@@ -48,7 +60,7 @@ class FirebaseMaintenanceRepository implements MaintenanceRepository {
         }
       });
 
-      return maintenances;
+      return maintenanceList;
     } catch (_) {
       return [];
     }

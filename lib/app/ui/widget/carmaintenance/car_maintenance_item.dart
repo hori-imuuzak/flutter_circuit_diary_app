@@ -81,7 +81,7 @@ class CarMaintenanceItem extends StatelessWidget {
 
   String _getTitle(CarMaintenance carMaintenance) {
     if (carMaintenance is Repair) {
-      return carMaintenance.maintenanceItemList?.map((item) => item.name)?.join("/") ?? "";
+      return carMaintenance.title;
     } else if (carMaintenance is Gas) {
       return "ガソリン";
     } else if (carMaintenance is Cost) {

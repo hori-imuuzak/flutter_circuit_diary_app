@@ -25,13 +25,6 @@ class EditMaintenanceGas extends StatelessWidget {
     _priceText.value =
         _priceText.value.copyWith(text: editingGas?.price?.toString() ?? "");
 
-    if (maintenanceState.isSaved) {
-      Future.delayed(Duration(milliseconds: 500)).then((_) {
-        maintenanceStateNotifier.clear();
-        Navigator.of(context).pop();
-      });
-    }
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

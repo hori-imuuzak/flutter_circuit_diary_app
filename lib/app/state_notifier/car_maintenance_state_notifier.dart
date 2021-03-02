@@ -4,6 +4,7 @@ import 'package:circuit_diary/app/domain/entity/maintenance_item.dart';
 import 'package:circuit_diary/app/domain/entity/repair.dart';
 import 'package:circuit_diary/app/domain/repository/maintenance_repository.dart';
 import 'package:circuit_diary/app/state/car_maintenance_state.dart';
+import 'package:flutter/material.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
@@ -26,7 +27,7 @@ class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
   Future<void> fetchMaintenanceList(String carUid) async {
     var list = await _maintenanceRepository.list(carUid);
 
-    if (list.isNotEmpty) {
+    if (list.isNotEmpty || carUid != state.carUid) {
       state = state.copyWith(maintenanceList: list);
     }
 
@@ -141,8 +142,10 @@ class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
       await _maintenanceRepository.create(state.carUid, state.editingRepair);
     }
     state = state.copyWith(isSaved: true);
-  }
 
+    await Future.delayed(Duration(seconds: 1));
+    clear();
+  }
 
   // ガソリンの初期設定
   void setGas(Gas gas) {
@@ -182,6 +185,9 @@ class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
       await _maintenanceRepository.create(state.carUid, state.editingGas);
     }
     state = state.copyWith(isSaved: true);
+
+    await Future.delayed(Duration(seconds: 1));
+    clear();
   }
 
   // 経費の初期設定
@@ -215,6 +221,9 @@ class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
       await _maintenanceRepository.create(state.carUid, state.editingCost);
     }
     state = state.copyWith(isSaved: true);
+
+    await Future.delayed(Duration(seconds: 1));
+    clear();
   }
 
   // 編集終了

@@ -31,8 +31,7 @@ class CarMaintenanceList extends StatelessWidget {
       body: ListView.builder(
           itemCount: maintenanceState.maintenanceList.length,
           itemBuilder: (BuildContext context, int index) {
-            return CarMaintenanceItem(
-                carMaintenance: maintenanceState.maintenanceList[index]);
+            return CarMaintenanceItem(carMaintenance: maintenanceState.maintenanceList[index]);
           }),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close,

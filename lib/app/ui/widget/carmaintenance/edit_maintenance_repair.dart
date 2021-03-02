@@ -33,13 +33,6 @@ class EditMaintenanceRepair extends StatelessWidget {
           .add(MaintenanceInputField(index: index, canDelete: canDelete));
     });
 
-    if (maintenanceState.isSaved) {
-      Future.delayed(Duration(milliseconds: 500)).then((_) {
-        maintenanceStateNotifier.clear();
-        Navigator.of(context).pop();
-      });
-    }
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
