@@ -1,12 +1,16 @@
+import 'package:circuit_diary/app/domain/entity/car_maintenance.dart';
+import 'package:circuit_diary/app/domain/entity/cost.dart';
+import 'package:circuit_diary/app/domain/entity/gas.dart';
 import 'package:circuit_diary/app/domain/entity/maintenance_type.dart';
+import 'package:circuit_diary/app/domain/entity/repair.dart';
 import 'package:circuit_diary/app/ui/style.dart';
 import 'package:circuit_diary/app/ui/widget/icon/svg_icon.dart';
 import 'package:flutter/material.dart';
 
 class CarMaintenanceItem extends StatelessWidget {
-  CarMaintenanceItem({this.type}) : assert(type != null);
+  CarMaintenanceItem({this.carMaintenance}) : assert(carMaintenance != null);
 
-  final MaintenanceType type;
+  final CarMaintenance carMaintenance;
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +41,11 @@ class CarMaintenanceItem extends StatelessWidget {
                           height: 44.0,
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: _getTypeColor(type)),
+                              color: _getTypeColor(carMaintenance.type)),
                           child: Padding(
                               padding: EdgeInsets.all(10),
                               child: SvgIcon(
-                                  assetName: _getIconName(type), size: 24))),
+                                  assetName: _getIconName(carMaintenance.type), size: 24))),
                     ],
                   ),
                   Expanded(
@@ -55,11 +59,11 @@ class CarMaintenanceItem extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("プラグ交換",
+                                  Text(_getTitle(carMaintenance),
                                       style: TextStyle(
                                           fontSize: FontSize.HEAD,
                                           fontWeight: FontWeight.bold)),
-                                  Text("2021/02/28",
+                                  Text(carMaintenance.doneAt.toString(),
                                       style: TextStyle(
                                           fontSize: FontSize.SUB,
                                           color: Colors.black45)),
@@ -73,6 +77,18 @@ class CarMaintenanceItem extends StatelessWidget {
                 ],
               ),
             )));
+  }
+
+  String _getTitle(CarMaintenance carMaintenance) {
+    if (carMaintenance is Repair) {
+      return carMaintenance.maintenanceItemList?.map((item) => item.name)?.join("/") ?? "";
+    } else if (carMaintenance is Gas) {
+      return "ガソリン";
+    } else if (carMaintenance is Cost) {
+      return carMaintenance.name;
+    }
+
+    return "タイトルなし";
   }
 
   Color _getTypeColor(MaintenanceType type) {

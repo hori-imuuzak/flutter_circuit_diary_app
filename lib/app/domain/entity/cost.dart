@@ -13,4 +13,14 @@ class Cost implements CarMaintenance {
 
   final type = MaintenanceType.Cost;
   final DateTime doneAt;
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      "type": this.type.toString(),
+      "doneAt": this.doneAt,
+      "name": this.name,
+      "price": this.price,
+    };
+  }
 }

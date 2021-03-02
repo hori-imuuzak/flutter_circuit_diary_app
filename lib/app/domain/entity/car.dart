@@ -1,6 +1,7 @@
 class Car {
-  Car({ this.name, this.odo, this.imageUrl });
+  Car({ this.uid, this.name, this.odo, this.imageUrl });
 
+  final String uid;
   final String name;
   final int odo;
   final String imageUrl;

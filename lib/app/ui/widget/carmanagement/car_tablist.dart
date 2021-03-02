@@ -39,7 +39,7 @@ class CarTabList extends StatelessWidget {
             body: TabBarView(
               children: [
                 EditCar(hasAppBar: false),
-                CarMaintenanceList(),
+                CarMaintenanceList(carUid: carState.uid),
               ],
             ),
           );

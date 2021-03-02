@@ -10,8 +10,8 @@ class FirebaseCarRepository implements CarRepository {
   @override
   Future<List<Car>> list() async {
     try {
-      var user = FirebaseAuth.instance.currentUser;
-      var snapshots = await FirebaseFirestore.instance
+      final user = FirebaseAuth.instance.currentUser;
+      final snapshots = await FirebaseFirestore.instance
         .collection("users")
         .doc(user.uid)
         .collection("cars")
@@ -19,13 +19,15 @@ class FirebaseCarRepository implements CarRepository {
 
       List<Car> cars = [];
       snapshots.docs.forEach((doc) {
-        var data = doc.data();
+        final data = doc.data();
         cars.add(Car(
+          uid: doc.id,
           name: data["name"],
           odo: data["odo"],
           imageUrl: data["imageUrl"],
         ));
       });
+
       return cars;
     } catch (_) {
       return [];
@@ -35,13 +37,19 @@ class FirebaseCarRepository implements CarRepository {
   @override
   Future<Car> create(Car car) async {
     try {
-      var user = FirebaseAuth.instance.currentUser;
-      await FirebaseFirestore.instance
+      final user = FirebaseAuth.instance.currentUser;
+      final ref = await FirebaseFirestore.instance
           .collection("users")
           .doc(user.uid)
           .collection("cars")
           .add(car.toMap());
-      return car;
+
+      return Car(
+        uid: ref.id,
+        name: car.name,
+        odo: car.odo,
+        imageUrl: car.imageUrl,
+      );
     } catch (_) {
       return null;
     }

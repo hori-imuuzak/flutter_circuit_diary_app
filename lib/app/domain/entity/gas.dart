@@ -8,9 +8,19 @@ class Gas implements CarMaintenance {
     this.price,
   });
 
-  final int liter;
+  final double liter;
   final int price;
 
   final type = MaintenanceType.Gas;
   final DateTime doneAt;
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      "type": this.type.toString(),
+      "doneAt": this.doneAt,
+      "liter": this.liter,
+      "price": this.price,
+    };
+  }
 }

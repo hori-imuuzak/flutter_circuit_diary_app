@@ -14,12 +14,12 @@ class EditMaintenanceRepair extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final carMaintenanceStateNotifier =
+    final maintenanceStateNotifier =
         Provider.of<CarMaintenanceStateNotifier>(context, listen: false);
-    final carMaintenanceState =
+    final maintenanceState =
         Provider.of<CarMaintenanceState>(context, listen: true);
 
-    final editingRepair = carMaintenanceState.editingRepair;
+    final editingRepair = maintenanceState.editingRepair;
     _dateText.value =
         _dateText.value.copyWith(text: editingRepair?.doneAt?.toString() ?? "");
     _odoText.value = _odoText.value.copyWith(
@@ -32,6 +32,13 @@ class EditMaintenanceRepair extends StatelessWidget {
       maintenanceList
           .add(MaintenanceInputField(index: index, canDelete: canDelete));
     });
+
+    if (maintenanceState.isSaved) {
+      Future.delayed(Duration(milliseconds: 500)).then((_) {
+        maintenanceStateNotifier.clear();
+        Navigator.of(context).pop();
+      });
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -50,7 +57,7 @@ class EditMaintenanceRepair extends StatelessWidget {
                     decoration: const InputDecoration(
                       labelText: "発生日",
                     ),
-                    validator: carMaintenanceStateNotifier.getEmptyValidator(),
+                    validator: maintenanceStateNotifier.getEmptyValidator(),
                     readOnly: true,
                     onTap: () async {
                       final picked = await showDatePicker(
@@ -59,7 +66,7 @@ class EditMaintenanceRepair extends StatelessWidget {
                         firstDate: DateTime.now().add(new Duration(days: -365)),
                         lastDate: DateTime.now().add(new Duration(days: 365)),
                       );
-                      carMaintenanceStateNotifier.editRepair(doneAt: picked);
+                      maintenanceStateNotifier.editRepair(doneAt: picked);
                     },
                   ),
                   ...maintenanceList,
@@ -68,7 +75,7 @@ class EditMaintenanceRepair extends StatelessWidget {
                     children: [
                       RaisedButton(
                           onPressed: () {
-                            carMaintenanceStateNotifier.addMaintenanceItem();
+                            maintenanceStateNotifier.addMaintenanceItem();
                           },
                           child: const Text("項目を追加する")),
                     ],
@@ -81,9 +88,9 @@ class EditMaintenanceRepair extends StatelessWidget {
                     ),
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
-                    validator: carMaintenanceStateNotifier.getEmptyValidator(),
+                    validator: maintenanceStateNotifier.getEmptyValidator(),
                     onChanged: (String value) {
-                      carMaintenanceStateNotifier.editRepair(odo: value);
+                      maintenanceStateNotifier.editRepair(odo: value);
                     },
                   ),
                   TextFormField(
@@ -94,7 +101,7 @@ class EditMaintenanceRepair extends StatelessWidget {
                     ),
                     keyboardType: TextInputType.text,
                     onChanged: (String value) {
-                      carMaintenanceStateNotifier.editRepair(note: value);
+                      maintenanceStateNotifier.editRepair(note: value);
                     },
                   ),
                 ],
@@ -107,12 +114,12 @@ class EditMaintenanceRepair extends StatelessWidget {
           child: ButtonTheme(
               minWidth: double.infinity,
               child: RaisedButton(
-                onPressed: () {
+                onPressed: maintenanceState.isSaved ? null : () {
                   if (_formKey.currentState.validate()) {
                     FocusScope.of(context).requestFocus(FocusNode());
                     _formKey.currentState.save();
 
-                    // trackStateNotifier.createTrack();
+                    maintenanceStateNotifier.saveRepair();
                   }
                 },
                 child: Text("保存する"),

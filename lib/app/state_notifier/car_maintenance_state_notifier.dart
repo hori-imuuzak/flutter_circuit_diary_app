@@ -1,4 +1,3 @@
-import 'package:circuit_diary/app/domain/entity/car_maintenance.dart';
 import 'package:circuit_diary/app/domain/entity/cost.dart';
 import 'package:circuit_diary/app/domain/entity/gas.dart';
 import 'package:circuit_diary/app/domain/entity/maintenance_item.dart';
@@ -30,6 +29,8 @@ class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
     if (list.isNotEmpty) {
       state = state.copyWith(maintenanceList: list);
     }
+
+    state = state.copyWith(carUid: carUid);
   }
 
   // 整備・修理の新規作成フォーム
@@ -134,6 +135,15 @@ class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
     }
   }
 
+  // 整備項目の保存
+  Future<void> saveRepair() async {
+    if (state.editingRepair != null) {
+      await _maintenanceRepository.create(state.carUid, state.editingRepair);
+    }
+    state = state.copyWith(isSaved: true);
+  }
+
+
   // ガソリンの初期設定
   void setGas(Gas gas) {
     state = state.copyWith(editingGas: gas, isUpdate: true);
@@ -147,7 +157,7 @@ class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
     if (liter == "") {
       nextLiter = null;
     } else if (liter != null) {
-      nextLiter = int.tryParse(liter) ?? editingGas?.liter;
+      nextLiter = double.tryParse(liter) ?? editingGas?.liter;
     }
 
     var nextPrice = editingGas?.price;
@@ -168,9 +178,10 @@ class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
 
   // ガソリンの保存
   Future<void> saveGas() async {
-    print(state.editingGas.doneAt);
-    print(state.editingGas.liter);
-    print(state.editingGas.price);
+    if (state.editingGas != null) {
+      await _maintenanceRepository.create(state.carUid, state.editingGas);
+    }
+    state = state.copyWith(isSaved: true);
   }
 
   // 経費の初期設定
@@ -200,9 +211,10 @@ class CarMaintenanceStateNotifier extends StateNotifier<CarMaintenanceState> {
 
   // 経費の保存
   Future<void> saveCost() async {
-    print(state.editingCost.doneAt);
-    print(state.editingCost.name);
-    print(state.editingCost.price);
+    if (state.editingCost != null) {
+      await _maintenanceRepository.create(state.carUid, state.editingCost);
+    }
+    state = state.copyWith(isSaved: true);
   }
 
   // 編集終了

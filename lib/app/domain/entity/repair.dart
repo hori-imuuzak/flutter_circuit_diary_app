@@ -16,4 +16,24 @@ class Repair implements CarMaintenance {
 
   final type = MaintenanceType.Repair;
   final DateTime doneAt;
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      "type": this.type.toString(),
+      "doneAt": this.doneAt,
+      "odo": this.odo,
+      "note": this.note,
+    };
+  }
+
+  List<Map<String, dynamic>> toMapListMaintenanceItemList() {
+    return this
+        .maintenanceItemList
+        .map((item) => ({
+              "name": item.name,
+              "price": item.price,
+            }))
+        .toList();
+  }
 }

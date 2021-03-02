@@ -8,4 +8,6 @@ abstract class CarMaintenance {
 
   final MaintenanceType type;
   final DateTime doneAt;
+
+  Map<String, dynamic> toMap();
 }

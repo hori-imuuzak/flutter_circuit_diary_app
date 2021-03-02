@@ -25,6 +25,13 @@ class EditMaintenanceGas extends StatelessWidget {
     _priceText.value =
         _priceText.value.copyWith(text: editingGas?.price?.toString() ?? "");
 
+    if (maintenanceState.isSaved) {
+      Future.delayed(Duration(milliseconds: 500)).then((_) {
+        maintenanceStateNotifier.clear();
+        Navigator.of(context).pop();
+      });
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -63,7 +70,7 @@ class EditMaintenanceGas extends StatelessWidget {
                     hintText: "給油量を入力してください",
                     labelText: "給油量（リットル）",
                   ),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: TextInputType.number,
                   validator: maintenanceStateNotifier.getEmptyValidator(),
                   onChanged: (String value) {
                     maintenanceStateNotifier.editGas(liter: value);
@@ -89,7 +96,7 @@ class EditMaintenanceGas extends StatelessWidget {
           child: ButtonTheme(
               minWidth: double.infinity,
               child: RaisedButton(
-                onPressed: () {
+                onPressed: maintenanceState.isSaved ? null : () {
                   if (_formKey.currentState.validate()) {
                     FocusScope.of(context).requestFocus(FocusNode());
                     _formKey.currentState.save();
